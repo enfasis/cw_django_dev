@@ -1,11 +1,22 @@
-from django.http import JsonResponse
+from django.db.models import Exists, OuterRef, Subquery
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from survey.models import Question, Answer
+from survey.constants import LikeValue
+from survey.models import Answer, Question, Like
 
 
 class QuestionListView(ListView):
-    model = Question
+    def get_queryset(self):
+        qs =  Question.objects.all()
+
+        if self.request.user.pk:
+            qs = qs.annotate(
+            user_likes=Exists(Like.objects.filter(question=OuterRef("pk"), author=self.request.user, value=LikeValue.Liked)),
+            user_dislikes=Exists(Like.objects.filter(question=OuterRef("pk"), author=self.request.user, value=LikeValue.Disliked)),
+            user_value=Subquery(Answer.objects.filter(question=OuterRef("pk"), author=self.request.user).values("value")),
+        )
+
+        return  qs.order_by("-ranking")
 
 
 class QuestionCreateView(CreateView):
@@ -15,7 +26,6 @@ class QuestionCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-
         return super().form_valid(form)
 
 
@@ -23,24 +33,3 @@ class QuestionUpdateView(UpdateView):
     model = Question
     fields = ['title', 'description']
     template_name = 'survey/question_form.html'
-
-
-def answer_question(request):
-    question_pk = request.POST.get('question_pk')
-    print(request.POST)
-    if not request.POST.get('question_pk'):
-        return JsonResponse({'ok': False})
-    question = Question.objects.filter(pk=question_pk)[0]
-    answer = Answer.objects.get(question=question, author=request.user)
-    answer.value = request.POST.get('value')
-    answer.save()
-    return JsonResponse({'ok': True})
-
-def like_dislike_question(request):
-    question_pk = request.POST.get('question_pk')
-    if not request.POST.get('question_pk'):
-        return JsonResponse({'ok': False})
-    question = Question.objects.filter(pk=question_pk)[0]
-    # TODO: Dar Like
-    return JsonResponse({'ok': True})
-

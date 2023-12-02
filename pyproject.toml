@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "cw-django-dev"
+version = "0.1.0"
+description = ""
+authors = ["Alejandro Estela <alejandro@estela.pe>"]
+readme = "README.md"
+packages = [{include = "cw_django_dev"}]
+
+[tool.poetry.dependencies]
+python = "3.11.0"
+asgiref = "3.4.1"
+django = "3.2.5"
+pytz = "2021.1"
+sqlparse = "0.4.1"
+django-ninja = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.6"
+ruff-lsp = "^0.0.45"
+django-stubs = "^4.2.6"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+factory-boy = "^3.3.0"
+pytest-django = "^4.7.0"
+coverage = "^7.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

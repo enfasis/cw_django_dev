@@ -52,8 +52,29 @@
 
 {% block js %}
     <script>
-
-
+        let clicked = false;
+        function setUpAction(url, className){
+            document.querySelectorAll(className).forEach(a => {
+                const question = parseInt(a.getAttribute("data-question"));
+                let value = a.getAttribute("data-value")
+                if(!isNaN(value)) value = parseInt(value)
+                a.addEventListener("click", async () => {
+                    // Avoid multiple requests in case of slow connection
+                    if (clicked) return
+                    clicked = true
+                    // Optimistic approach to answer
+                    await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({question, value})
+                    }).then(()=> location.reload())
+                })
+            })
+        };
+        setUpAction("/api/question/answer", ".answer");
+        setUpAction("/api/question/like", ".like");
     </script>
-
 {% endblock %}
