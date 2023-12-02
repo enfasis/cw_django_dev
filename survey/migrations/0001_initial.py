@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,45 +14,135 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateField(auto_now_add=True, verbose_name='Creada')),
-                ('title', models.CharField(max_length=200, verbose_name='Título')),
-                ('description', models.TextField(verbose_name='Descripción')),
-                ('ranking', models.IntegerField(default=10)),
-                ('is_from_today', models.BooleanField(default=True)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to=settings.AUTH_USER_MODEL, verbose_name='Pregunta')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, verbose_name="Creada")),
+                ("title", models.CharField(max_length=200, verbose_name="Título")),
+                ("description", models.TextField(verbose_name="Descripción")),
+                ("ranking", models.IntegerField(default=10)),
+                ("is_from_today", models.BooleanField(default=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questions",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Pregunta",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Like',
+            name="Like",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value', models.CharField(choices=[('like', 'Me gusta'), ('dislike', 'Me gusta')], max_length=9)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to=settings.AUTH_USER_MODEL, verbose_name='Autor')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='survey.question', verbose_name='Pregunta')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        choices=[("like", "Me gusta"), ("dislike", "Me gusta")],
+                        max_length=9,
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="likes",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Autor",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="likes",
+                        to="survey.question",
+                        verbose_name="Pregunta",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Answer',
+            name="Answer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value', models.PositiveIntegerField(choices=[(0, 'Sin Responder'), (1, 'Muy Bajo'), (2, 'Bajo'), (3, 'Regular'), (4, 'Alto'), (5, 'Muy Alto')], default=0, verbose_name='Respuesta')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to=settings.AUTH_USER_MODEL, verbose_name='Autor')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to='survey.question', verbose_name='Pregunta')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "value",
+                    models.PositiveIntegerField(
+                        choices=[
+                            (0, "Sin Responder"),
+                            (1, "Muy Bajo"),
+                            (2, "Bajo"),
+                            (3, "Regular"),
+                            (4, "Alto"),
+                            (5, "Muy Alto"),
+                        ],
+                        default=0,
+                        verbose_name="Respuesta",
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="answers",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Autor",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="answers",
+                        to="survey.question",
+                        verbose_name="Pregunta",
+                    ),
+                ),
             ],
         ),
         migrations.AddIndex(
-            model_name='question',
-            index=models.Index(fields=['ranking'], name='survey_ques_ranking_d42fee_idx'),
+            model_name="question",
+            index=models.Index(
+                fields=["ranking"], name="survey_ques_ranking_d42fee_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='like',
-            constraint=models.UniqueConstraint(fields=('question', 'author'), name='unique_like'),
+            model_name="like",
+            constraint=models.UniqueConstraint(
+                fields=("question", "author"), name="unique_like"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='answer',
-            constraint=models.UniqueConstraint(fields=('question', 'author'), name='unique_answer'),
+            model_name="answer",
+            constraint=models.UniqueConstraint(
+                fields=("question", "author"), name="unique_answer"
+            ),
         ),
     ]
