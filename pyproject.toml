@@ -25,7 +25,34 @@ pytest = "^7.4.3"
 factory-boy = "^3.3.0"
 pytest-django = "^4.7.0"
 coverage = "^7.3.2"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "quizes.settings"
+django_find_project = true
+django_debug_mode = "keep"
+addopts = "--reuse-db -s --cov"
+filterwarnings = [
+    "ignore::DeprecationWarning:django", # too many warnings for django 3.2.5
+    "ignore:::pydantic",
+]
+testpaths = ["tests"]
+
+
+[tool.coverage.run]
+branch = true
+omit = [
+    '*/tests/*',
+    '*/migrations/*',
+    '*__init__.py*',
+    '*wsgi.py*',
+    '*admin.py*',
+]
+
+[tool.coverage.report]
+show_missing = true
+sort = "cover"

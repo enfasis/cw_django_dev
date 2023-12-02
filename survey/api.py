@@ -47,10 +47,14 @@ def like_or_dislike_question(request, data: LikeSchema):
 
     points = 0
 
-    if created or Like.objects.filter(pk=like.pk).exclude(value=data.value).update(
-        value=data.value
-    ):
+    if created:
         points = 5 if data.value == LikeValue.Liked else -3
+    elif (
+        Like.objects.filter(pk=like.pk)
+        .exclude(value=data.value)
+        .update(value=data.value)
+    ):
+        points = 8 if data.value == LikeValue.Liked else -8
 
     question.ranking = F("ranking") + points
     question.save()
