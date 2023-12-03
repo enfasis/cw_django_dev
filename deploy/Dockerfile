@@ -68,6 +68,11 @@ COPY --from=builder-base $VIRTUAL_ENV $VIRTUAL_ENV
 
 WORKDIR /app
 
+COPY poetry.lock pyproject.toml manage.py  ./
+COPY quizes/ ./quizes
+COPY survey/ ./survey
+COPY templates/ ./templates
+
 RUN  --mount=type=cache,target=/root/.cache  poetry install --no-root
 
 CMD ["bash"]
