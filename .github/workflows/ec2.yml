@@ -4,7 +4,22 @@ on:
   push:
     branches: [ "master" ]
 
+# TODO: Use tags from build in "container" property for following jobs
+env:
+  BASE_IMAGE: enfasis2w1q/cw-base
+  TEST_IMAGE: enfasis2w1q/cw-test
+
 jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: strumwolf/delete-deployment-environment@v2
+        with:
+          # ⚠️ The provided token needs permission for admin write:org
+          token: ${{ secrets.GITHUB_TOKEN }}
+          onlyRemoveDeployments: true
+          environment: demo
+
   build:
     runs-on: ubuntu-latest
     environment: demo
@@ -20,14 +35,55 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          pull: true
           push: true
           file: deploy/Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cw-base
+          tags: ${{ env.BASE_IMAGE }}
       - name: Build and push Test Image
         uses: docker/build-push-action@v5
         with:
           context: .
+          pull: true
           push: true
           file: deploy/Dockerfile
           target: testing
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cw-testing
+          tags: ${{ env.TEST_IMAGE }}
+
+  test:
+    runs-on: ubuntu-latest
+    environment: demo
+    needs: [build]
+    container: enfasis2w1q/cw-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Running Tests
+        run: pytest --capture=sys --junitxml=junit.xml
+      - name: Coverage Fail
+        run: coverage xml --fail-under=95 -o cobertura.xml
+      - name: Upload Report
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: bash -c "$(curl -Ls https://coverage.codacy.com/get.sh)"
+
+  format:
+    runs-on: ubuntu-latest
+    environment: demo
+    needs: [build]
+    container: enfasis2w1q/cw-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Ruff format
+        run: ruff format .
+
+  lint:
+    runs-on: ubuntu-latest
+    environment: demo
+    needs: [build]
+    container: enfasis2w1q/cw-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Ruff Check
+        run: ruff check .

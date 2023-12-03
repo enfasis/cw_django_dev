@@ -66,12 +66,11 @@ FROM python-base as testing
 COPY --from=builder-base $POETRY_HOME $POETRY_HOME
 COPY --from=builder-base $VIRTUAL_ENV $VIRTUAL_ENV
 
+RUN apt-get update && apt-get install --no-install-recommends -y curl
+
 WORKDIR /app
 
 COPY poetry.lock pyproject.toml manage.py  ./
-COPY quizes/ ./quizes
-COPY survey/ ./survey
-COPY templates/ ./templates
 
 RUN  --mount=type=cache,target=/root/.cache  poetry install --no-root
 
