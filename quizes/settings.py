@@ -18,11 +18,7 @@ BASE_DIR = Path(__file__) - 2
 env = Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, "fake_key"),
-    DB_NAME=(str, ""),
-    DB_USER=(str, ""),
-    DB_PASSWORD=(str, ""),
-    DB_HOST=(str, "localhost"),
-    DB_PORT=(int, 5432),
+    ALLOWED_HOSTS=(str, "*"),
 )
 
 env.read_env(BASE_DIR(".env"))
@@ -36,7 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
 # Application definition

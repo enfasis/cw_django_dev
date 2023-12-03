@@ -40,9 +40,6 @@ FROM python-base as builder-base
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
-  libpq-dev \
-  libsasl2-dev \
-  libssl-dev \
   curl
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
@@ -99,7 +96,7 @@ RUN chmod +x start
 ENV GUNICORN_WORKERS=1
 ENV GUNICORN_THREADS=1
 ENV DEBUG=False
-ENV DJANGO_SETTINGS_MODULE = "quizes.production"
+ENV DJANGO_SETTINGS_MODULE="quizes.production"
 
 RUN ls -a
 
