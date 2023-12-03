@@ -1,5 +1,6 @@
 # Claritywave challenge
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/enfasis/cw_django_dev/ec2.yml?label=Workflow)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/464aa66f61f24b698c230408d246597f)](https://app.codacy.com/gh/enfasis/cw_django_dev?utm_source=github.com&utm_medium=referral&utm_content=enfasis/cw_django_dev&utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/bd9cd7f2b3404a1b84a7bf17c1ab9d4d)](https://app.codacy.com/gh/enfasis/cw_django_dev/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 
