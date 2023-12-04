@@ -102,9 +102,13 @@ jobs:
           KUBE_CA: ${{ secrets.KUBE_CA }}
           KUBE_CLIENT_KEY: ${{ secrets.KUBE_CLIENT_KEY }}
           KUBE_CLIENT_CRT: ${{ secrets.KUBE_CLIENT_CRT }}
-      - name: Deploy Postgress
+      - name: Setting up Postgress
         run: |
           kubectl apply -f deploy/pg-storage.yaml
           kubectl apply -f deploy/pg-deployment.yaml
       - name: Deploy App
-        run: kubectl apply -f deploy/django-app.yaml
+        run: |
+          kubectl apply -f deploy/django-app.yaml
+          kubectl apply -f deploy/django-cron.yaml
+      - name: Apply ingress
+        run: kubectl apply -f deploy/ingress.yaml

@@ -30,3 +30,10 @@ They are found in the `./tests/` path.
 ``` sh
 pytest
 ```
+
+## Production 
+Kubernetes configurations files are defined in `./deploy/`.
+
+### About the current deployment
+This project is deployed in an EC2 Instance running kubernetes cluster using [minikube](https://minikube.sigs.k8s.io/docs/) with a Postgres Database.
+There are some security group rules to access the kubernetes cluster server and the app deployed. Given that this is a toy deployment there are some security and best practices concerns like `minikube` is not for production, but for now, it gets the job done. 

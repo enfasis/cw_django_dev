@@ -7,7 +7,7 @@
                 <div class="d-flex flex-row">
                     <div class="col-10">
                         <i class="far fa-question-circle" title="{{ question.description }}"></i>
-                        <span class="fw-bold">{{ question.title }}</span>
+                        <span class="fw-bold">{{ question.title }} {%if question.is_from_today %} (HOY) {% endif %}</span>
                     </div>
                     <div class="col-2">
                         <span class="fw-lighter">Autor:</span> {{ question.author }}
@@ -47,6 +47,21 @@
         {% empty %}
             <div>No hay preguntas.</div>
         {% endfor %}
+        {% if is_paginated %}
+            <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 

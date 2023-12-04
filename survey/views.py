@@ -6,6 +6,8 @@ from survey.models import Answer, Question, Like
 
 
 class QuestionListView(ListView):
+    paginate_by = 10
+
     def get_queryset(self):
         qs = Question.objects.all()
 

@@ -55,6 +55,7 @@ omit = [
     '*__init__.py*',
     '*wsgi.py*',
     '*admin.py*',
+    '*create_dummy_data.py*',
 ]
 
 [tool.coverage.report]

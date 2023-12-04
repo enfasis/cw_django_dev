@@ -17,6 +17,7 @@ spec:
       initContainers:
         - name: cw-base-migrate
           image: enfasis2w1q/cw-base
+          imagePullPolicy: Always
           env:
             - name: DATABASE_URL
               value: psql://user:secret@postgres:5432/base
@@ -24,6 +25,7 @@ spec:
       containers:
         - name: cw-base
           image: enfasis2w1q/cw-base
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
