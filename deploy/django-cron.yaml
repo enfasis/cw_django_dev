@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: cw-cron
 spec:
-  schedule: "* * * * *"
+  schedule: "*/2 * * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
@@ -24,7 +24,5 @@ spec:
             env:
               - name: DATABASE_URL
                 value: psql://user:secret@postgres:5432/base
-            command:
-              - python manage.py upload_daily_ranking
-              - python manage.py create_dummy_data
-              - echo finish
+            command: ["/bin/sh", "-c"]
+            args: ["python manage.py upload_daily_ranking; python manage.py create_dummy_data; echo finish"]
