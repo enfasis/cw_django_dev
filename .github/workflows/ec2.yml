@@ -24,8 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: demo
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -55,8 +54,7 @@ jobs:
     needs: [build]
     container: enfasis2w1q/cw-test
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Running Tests
         run: pytest --capture=sys --junitxml=junit.xml
       - name: Coverage Fail
@@ -72,8 +70,7 @@ jobs:
     needs: [build]
     container: enfasis2w1q/cw-test
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Ruff format
         run: ruff format .
 
@@ -83,7 +80,31 @@ jobs:
     needs: [build]
     container: enfasis2w1q/cw-test
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Ruff Check
         run: ruff check .
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: demo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-kubectl@v3
+      - name: Setting up minikube config
+        run: |
+          mkdir ~/.kube
+          echo "$KUBE_CONFIG" | base64 --decode > ~/.kube/config
+          echo "$KUBE_CA" > ~/.kube/ca.crt
+          echo "$KUBE_CLIENT_KEY" > ~/.kube/client.key
+          echo "$KUBE_CLIENT_CRT" > ~/.kube/client.crt
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          KUBE_CA: ${{ secrets.KUBE_CA }}
+          KUBE_CLIENT_KEY: ${{ secrets.KUBE_CLIENT_KEY }}
+          KUBE_CLIENT_CRT: ${{ secrets.KUBE_CLIENT_CRT }}
+      - name: Deploy Postgress
+        run: |
+          kubectl apply -f deploy/pg-storage.yaml
+          kubectl apply -f deploy/pg-deployment.yaml
+      - name: Deploy App
+        run: kubectl apply -f deploy/django-app.yaml

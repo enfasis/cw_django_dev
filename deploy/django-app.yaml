@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cw-base
+  labels:
+    app: cw-base
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cw-base
+  template:
+    metadata:
+      labels:
+        name: cw-base
+    spec:
+      initContainers:
+        - name: cw-base-migrate
+          image: enfasis2w1q/cw-base
+          env:
+            - name: DATABASE_URL
+              value: psql://user:secret@postgres:5432/base
+          command: ["python", "manage.py", "migrate"]
+      containers:
+        - name: cw-base
+          image: enfasis2w1q/cw-base
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DATABASE_URL
+              value: psql://user:secret@postgres:5432/base
+
+---
+# START Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: cw-base
+  labels:
+    app: cw-base
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 5000
+  selector:
+    name: cw-base
+# END SERVICE
