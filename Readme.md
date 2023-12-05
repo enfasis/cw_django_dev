@@ -62,19 +62,19 @@ There are some security group rules to access the kubernetes cluster server and 
 
 For learning purposes I decided to go for this approach instead of using docker swarm or just deploy the app on bare metal. Also this a list of this to improve:
 
-- CI
-    - Make a better github action ci to reuse the docker cache from previous jobs
-    - Set up rules to run specific jobs based on branches o releases
-    - Test workflow to use a postgress db 
-    - Load testing
-    - E2E
-- CD
-    - Set up manual deployments, that requires approvals 
-    - Integrate a real GitOps strategy with... maybe... "argocd" 
-    - Analysis and monitor tools
-- APP
-    - Django is a nice web framework, but if my views have some interaction with apis (to monitor or performance), I will consider decoupling the frontend from it.
-    - For the previous reason mentionen above I used `django-ninja` instead of `rest-framework`, but I'll choose a typed library if I will interact with too many developers or I'll update the app the next year.
+* CI
+  - Make a better github action ci to reuse the docker cache from previous jobs
+  - Set up rules to run specific jobs based on branches o releases
+  - Test workflow to use a postgress db 
+  - Load testing
+  - E2E
+* CD
+  - Set up manual deployments, that requires approvals 
+  - Integrate a real GitOps strategy with... maybe... "argocd" 
+  - Analysis and monitor tools
+* APP
+  - Django is a nice web framework, but if my views have some interaction with apis (to monitor or performance), I will consider decoupling the frontend from it.
+  - For the previous reason mentionen above I used `django-ninja` instead of `rest-framework`, but I'll choose a typed library if I will interact with too many developers or I'll update the app the next year.
  
  
 ### About tasks
