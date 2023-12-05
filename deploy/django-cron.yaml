@@ -25,4 +25,4 @@ spec:
               - name: DATABASE_URL
                 value: psql://user:secret@postgres:5432/base
             command: ["/bin/sh", "-c"]
-            args: ["python manage.py upload_daily_ranking; python manage.py create_dummy_data; echo finish"]
+            args: ["python manage.py update_daily_ranking; python manage.py create_dummy_data; echo finish"]
